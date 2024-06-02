@@ -4,9 +4,23 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Title>ReactBlazorAdapter</Title>
+        <Authors>flightlesscoder</Authors>
+        <Description>An adapter that allows embedding React components in Blazor WASM</Description>
+        <Copyright>Katie Michelle Snead</Copyright>
+        <PackageProjectUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/flightlesscoder/ReactBlazorAdapter/blob/main/LICENSE.md</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</RepositoryUrl>
+        <RepositoryType>github</RepositoryType>
+        <PackageTags>blazor,react,wasm</PackageTags>
+        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
-
+    <ItemGroup>
+        <None Include=".\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
     <ItemGroup>
         <SupportedPlatform Include="browser"/>
     </ItemGroup>
