@@ -16,7 +16,7 @@ When your Blazor component is disposed, the react component tree will be unmount
 
 ## Adding a nuget Reference
 
-Like any other nuget package, you can use the dotnet CLI: (coming soon!)
+Like any other nuget package, you can use the dotnet CLI:
 
 ```
 dotnet add package ReactBlazorAdapter
