@@ -233,6 +233,12 @@ Add the compiled output to `wwwroot/static/js` (ie "main" and "chunk" files). Re
 
 As create-react-app expects a div with id "root", if you do not wish to eject and customize your create-react-app, you may want to add a `<div id="root" style="display: none;" />` to your `index.html` file to avoid a console error.
 
+### Passing methods as attributes to ReactComponent causes Visual Studio to suggest invoking the method (CS8974)
+
+This seems to be an open issue with the C# toolchain that has been fixed before:
+https://github.com/dotnet/roslyn/issues/60423
+https://github.com/dotnet/roslyn/issues/68307
+
 ### License and Copyright
 
 This project is licensed under the Apache 2.0 license (see LICENSE.md).
