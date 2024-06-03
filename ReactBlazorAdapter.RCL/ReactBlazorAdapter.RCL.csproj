@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>ReactBlazorAdapter for MAUI</Title>
+    <Company />
+    <Authors>Katie Michelle Snead</Authors>
+    <Description>This project aims to be a lightweight adapter that allows embedding React components in Blazor while integrating the React lifecycle and providing support for callbacks to Blazor components.</Description>
+    <Copyright>Katie Michelle Snead 2024</Copyright>
+    <PackageProjectUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</RepositoryUrl>
+    <PackageTags>blazor,maui,react</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Users\Katie\Downloads\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+    <ItemGroup>
+	    <None Include="..\..\..\..\Users\Katie\Downloads\LICENSE.md">
+		    <Pack>True</Pack>
+		    <PackagePath>\</PackagePath>
+	    </None>
+    </ItemGroup>
+	
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.5" />
+  </ItemGroup>
+
+</Project>

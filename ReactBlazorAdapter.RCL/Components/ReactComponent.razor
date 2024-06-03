@@ -1,0 +1,120 @@
+﻿@using Microsoft.JSInterop
+@implements IDisposable
+@inject IJSRuntime JS
+
+@GetElementMarkupString()
+
+@code {
+    private bool _isFirstParams = true;
+    private Dictionary<string, Delegate> _delegates = new();
+    private DotNetObjectReference<ComponentBase>? _parent = null;
+
+    ///<summary>
+    /// Pass literal "this" from the consuming Blazor component if you wish to receive callbacks.
+    ///</summary>
+    [Parameter]
+    public ComponentBase? CallbackTo { get; set; }
+
+    ///<summary>
+    /// By default, a "div" tag is used to mount the React component. You can change this via the ElementName property.
+    ///</summary>
+    [Parameter]
+    public string ElementName { get; set; } = "div";
+    ///<summary>
+    /// The component name is an arbitrary value that must match the value passed to ReactBlazorAdapter.registerComponent
+    ///</summary>
+    [Parameter, EditorRequired] public string ComponentName { get; set; } = String.Empty;
+    ///<summary>
+    /// The element id must be a unique, valid DOM/HTML element id.
+    ///</summary>
+    [Parameter, EditorRequired] public string ElementId { get; set; } = String.Empty;
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+
+    ///<summary>
+    /// Invoke an instance method on a React class-based component.
+    ///</summary>
+    public async Task<T> InvokeMethod<T>(string methodName, object[] methodArgs)
+    {
+        var allArgs = new object[] { ElementId, methodName }.Concat(methodArgs).ToArray();
+        return await JS.InvokeAsync<T>("globalThis.ReactBlazorAdapter.invokeMethod", allArgs);
+    }
+
+    ///<summary>
+    /// Get the markup for the element used to mount the top-level React component.
+    ///</summary>
+    public MarkupString GetElementMarkupString()
+    {
+        return (MarkupString)$"<{ElementName} id=\"{ElementId}\"></{ElementName}>";
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!_isFirstParams)
+        {
+            _delegates = new Dictionary<string, Delegate>();
+            var props = (InputAttributes ?? new Dictionary<string, object>())
+            .Select(i =>
+            {
+                if (i.Value is not Delegate action)
+                {
+                    return i;
+                }
+                _delegates.Add(i.Key, action);
+                var kvp = new KeyValuePair<string, object>(
+                i.Key,
+                new
+                {
+                    IS_REACT_BLAZOR_CALLBACK = true,
+                    propName = i.Key
+                });
+                return kvp;
+            }).ToDictionary();
+            await JS.InvokeAsync<Task>("globalThis.ReactBlazorAdapter.rerenderRoot", new object[]
+            {
+                ElementId, props
+            });
+        }
+        _isFirstParams = false;
+        await base.OnParametersSetAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            if (CallbackTo != null)
+            {
+                _parent = DotNetObjectReference.Create(CallbackTo);
+            }
+            var props = (InputAttributes ?? new Dictionary<string, object>())
+                .Select(i =>
+                {
+                    if (i.Value is not Delegate action) { return i; }
+                    _delegates.Add(i.Key, action);
+                    var kvp = new KeyValuePair<string, object>(
+                        i.Key,
+                        new { IS_REACT_BLAZOR_CALLBACK = true, propName = i.Key }
+                    );
+                    return kvp;
+                }).ToDictionary();
+            await JS.InvokeAsync<Task>("globalThis.ReactBlazorAdapter.createRoot", [
+                ElementId, ComponentName, "#" + ElementId, _parent, props
+            ]);
+        }
+    }
+
+    ///<summary>
+    /// Used to implement IDisposable, disposes any .NET Object reference and unmounts the React root for this component.
+    ///</summary>
+    public async void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _parent?.Dispose(); //Dispose the Blazor .NET Object Reference for JS interop, not the blazor page itself
+        await JS.InvokeAsync<Task>("globalThis.ReactBlazorAdapter.unmountRoot", [
+            ElementId
+        ]);
+        GC.ReRegisterForFinalize(this);
+    }
+}
