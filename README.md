@@ -7,8 +7,19 @@ When your Blazor component is disposed, the react component tree will be unmount
 
 ## Setup
 
+### Blazor WebAssembly Standalone App
+
 * [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter (nuget)
 * [Include the script](#including-adapter-javascript) for ReactBlazorAdapter (JS)
+* [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
+* [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
+* [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
+* [Update props from Blazor](#updating-props-from-blazor) with built-in `StateHasChanged()`
+
+### .NET MAUI Blazor Hybrid App
+
+* [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter.RCL (nuget)
+* [Include the script](#including-adapter-javascript-maui) for ReactBlazorAdapter.MAUI.js (JS)
 * [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
 * [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
 * [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
@@ -19,7 +30,11 @@ When your Blazor component is disposed, the react component tree will be unmount
 Like any other nuget package, you can use the dotnet CLI:
 
 ```
+# for Blazor WebAssembly Standalone App
 dotnet add package ReactBlazorAdapter
+
+# for .NET MAUI Blazor Hybrid App
+dotnet add package ReactBlazorAdapter.RCL
 ```
 
 Or use your favorite IDE to add a nuget package reference to the consuming Blazor WASM project.
@@ -33,6 +48,18 @@ For Blazor projects hosted by Visual Studio/Rider, you can add a reference to yo
 
 **Make sure to include this script before any code that registers your React components** with the ReactBlazorAdapter.
 You can also include the raw `ReactBlazorAdapter.js` file from this repository, which should be less than 2 kB gzipped.
+
+## Including Adapter JavaScript MAUI
+
+Add the ReactBlazorAdapter.MAUI.js reference to your index.html file:
+
+```
+<!-- //Add the MAUI version of the ReactBlazorAdapter JS library before React JS bundle WITHOUT module attribute -->
+<script src="_content/ReactBlazorAdapter.RCL/ReactBlazorAdapter.MAUI.js"></script>
+<!-- //Add the React JS bundle before blazor.webview.js -->
+<script src="./static/js/my-react-bundle.js"></script>
+<script src="_framework/blazor.webview.js" autostart="false"></script>
+```
 
 ## Initializing ReactBlazorAdapter
 
@@ -61,6 +88,8 @@ Within your Blazor markup, add the `using` directive and leverage the `ReactComp
         ElementId="foocontainer"
 />
 ```
+
+If using MAUI, change the using to `@using ReactBlazorAdapter.RCL.Components`
 
 ### Getting a `ref` to `class` components
 
