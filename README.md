@@ -203,6 +203,35 @@ You can change the element using the `ElementName` Blazor attribute.
 * Make sure you've registered your component using `ReactBlazorAdapter.registerComponent()`
 * Check the developer log carefully for all console errors
 
+### What versions of React and .NET are supported?
+
+Currently only .NET 8.0 and React 18 are supported, but I'd like to add support for older versions of React and .NET 6.0 in the future.
+
+### I have a create-react-app bundle, how can I use it?
+
+I hope to add some demo examples to this repository soon. In the meantime... in your `App.js` file, add:
+
+```
+/*global globalThis*/
+// the above line informs eslint that this standard global variable exists
+// add React and ReactDOM explicit imports:
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+//...App component code...
+
+// initialize and register components
+globalThis["ReactBlazorAdapter"].initialize(React, ReactDOM)
+globalThis["ReactBlazorAdapter"].registerComponent('sample-app', App)
+globalThis["ReactBlazorAdapter"].registerComponent('sample-component', SampleComponent)
+
+export default App
+```
+
+Add the compiled output to `wwwroot/static/js` (ie "main" and "chunk" files). Reference them from `index.html` after the `ReactBlazorAdapter.js` file and before `blazor.webview.js` (ie for MAUI).
+
+As create-react-app expects a div with id "root", if you do not wish to eject and customize your create-react-app, you may want to add a `<div id="root" style="display: none;" />` to your `index.html` file to avoid a console error.
+
 ### License and Copyright
 
 This project is licensed under the Apache 2.0 license (see LICENSE.md).
