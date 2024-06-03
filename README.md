@@ -217,13 +217,14 @@ I hope to add some demo examples to this repository soon. In the meantime... in 
 // add React and ReactDOM explicit imports:
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SampleComponent from 'path/to/component';
 
 //...App component code...
 
 // initialize and register components
-globalThis["ReactBlazorAdapter"].initialize(React, ReactDOM)
-globalThis["ReactBlazorAdapter"].registerComponent('sample-app', App)
-globalThis["ReactBlazorAdapter"].registerComponent('sample-component', SampleComponent)
+globalThis["ReactBlazorAdapter"].initialize(React, ReactDOM);
+globalThis["ReactBlazorAdapter"].registerComponent('sample-app', App);
+globalThis["ReactBlazorAdapter"].registerComponent('sample-component', SampleComponent);
 
 export default App
 ```
