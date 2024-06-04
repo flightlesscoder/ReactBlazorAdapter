@@ -43,11 +43,13 @@ Or use your favorite IDE to add a nuget package reference to the consuming Blazo
 
 For Blazor projects hosted by Visual Studio/Rider, you can add a reference to your index.html file such as:
 ```
-<script type="module" src="/_content/ReactBlazorAdapter/ReactBlazorAdapter.js"></script>
+<!-- The ReactBlazorAdapter.js should come before other scripts -->
+<script src="/_content/ReactBlazorAdapter/ReactBlazorAdapter.js"></script>
+<!-- IE: a create-react-app bundled JS file, components registered here: -->
+<script src="static/js/main.d5dccc3d.js"></script>
+<!-- Blazor built-in JS comes last -->
+<script src="_framework/blazor.webassembly.js"></script>
 ```
-
-**Make sure to include this script before any code that registers your React components** with the ReactBlazorAdapter.
-You can also include the raw `ReactBlazorAdapter.js` file from this repository, which should be less than 2 kB gzipped.
 
 ## Including Adapter JavaScript MAUI
 
