@@ -15,6 +15,8 @@
     <RepositoryUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</RepositoryUrl>
     <PackageTags>blazor,maui,react</PackageTags>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Changed invokeMethod to invokeMethodAsync as MAUI does not support synchronous invocation of .NET methods from JS</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -45,11 +45,11 @@
             if (!dotNetRef) {
                 console.error('Tried to invoke a callback from React, but no parent blazor component reference was available. Did you specify attribute CallbackTo=this in your blazor component?')
             }
-            if (!dotNetRef?.invokeMethod) {
-                console.error('dotNetRef missing invokeMethod - is it a .NET reference object from blazor?')
+            if (!dotNetRef?.invokeMethodAsync) {
+                console.error('dotNetRef missing invokeMethodAsync - is it a .NET reference object from blazor?')
             }
             log('Invoking', propName)
-            dotNetRef.invokeMethod(propName, ...args)
+            dotNetRef.invokeMethodAsync(propName, ...args)
         },
         "setRef": function setRef(rootName, anyPassedRef, renderedComponent, ...args) {
             log('setRef', rootName)
