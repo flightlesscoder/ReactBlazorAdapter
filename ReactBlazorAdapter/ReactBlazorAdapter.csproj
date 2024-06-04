@@ -9,24 +9,26 @@
         <Description>An adapter that allows embedding React components in Blazor WASM</Description>
         <Copyright>Katie Michelle Snead</Copyright>
         <PackageProjectUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/flightlesscoder/ReactBlazorAdapter/blob/main/LICENSE.md</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/flightlesscoder/ReactBlazorAdapter/LICENSE.md</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</RepositoryUrl>
         <RepositoryType>github</RepositoryType>
         <PackageTags>blazor,react,wasm</PackageTags>
-        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <PackageReleaseNotes>* Change ReactBlazorAdapter.js to non-module so it is not deferred
+* Remove console log</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include=".\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     <ItemGroup>
-        <SupportedPlatform Include="browser"/>
+        <SupportedPlatform Include="browser" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
     </ItemGroup>
 
 </Project>
