@@ -5,6 +5,8 @@
 This project aims to be a lightweight adapter that allows embedding React components in Blazor while integrating the React lifecycle and providing support for callbacks to Blazor components.
 When your Blazor component is disposed, the react component tree will be unmounted (ie: event handlers managed by react will be unsubscribed).
 
+
+
 ## Setup
 
 ### Blazor WebAssembly Standalone App
@@ -211,7 +213,7 @@ Currently only .NET 8.0 and React 18 are supported, but I'd like to add support 
 
 ### I have a create-react-app bundle, how can I use it?
 
-I hope to add some demo examples to this repository soon. In the meantime... in your `App.js` file, add:
+[See the demo examples here](https://github.com/flightlesscoder/ReactBlazorAdapter/tree/main/Demos). In your `App.js` file, add:
 
 ```
 /*global globalThis*/
