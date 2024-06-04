@@ -1,0 +1,40 @@
+﻿@page "/hooks-component"
+@using ReactBlazorAdapter.Components
+
+<h1>Hooks Component</h1>
+
+<ReactComponent ComponentName="sample-hooks"
+                ElementId="samplehooks"
+                onCountUpdated="@OnUpdatedCallback"
+                message="@MessageFromBlazor"
+                CallbackTo="this" />
+
+<button @onclick="UpdateMessage">Update the message from Blazor</button>
+<span>React last updated with: @LastReactValue</span>
+@code {
+    public ReactComponent SampleHooksComponent { get; set; } = null!;
+    public bool IsRendering { get; set; } = true;
+    public int LastReactValue { get; set; }
+    public string MessageFromBlazor { get; set; } = "original message";
+
+    [JSInvokable("onCountUpdated")]
+    public void OnUpdatedCallback(int value)
+    {
+        Console.WriteLine("Blazor updated by react! " + value);
+        LastReactValue = value;
+        StateHasChanged();
+    }
+
+    private void ToggleReact()
+    {
+        IsRendering = !IsRendering;
+        StateHasChanged();
+    }
+
+    private void UpdateMessage()
+    {
+        MessageFromBlazor = "Message updated " + DateTime.Now.ToShortTimeString();
+        StateHasChanged();
+    }
+
+}
