@@ -22,13 +22,13 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <!-- create-react-app expects a div.#root unless you customize/eject -->
+    <div id="root" style="display: none;" />
     <!-- //Add the MAUI version of the ReactBlazorAdapter JS library before React JS bundle WITHOUT module -->
     <script src="_content/ReactBlazorAdapter.RCL/ReactBlazorAdapter.MAUI.js"></script>
     <!-- //Add the React JS bundle before the blazor.webview.js runs -->
     <script src="./static/js/main.d5dccc3d.js"></script>
     <script src="_framework/blazor.webview.js" autostart="false"></script>
-    <!-- create-react-app expects a div.#root unless you customize/eject -->
-    <div id="root" style="display: none;" />
 </body>
 
 </html>
