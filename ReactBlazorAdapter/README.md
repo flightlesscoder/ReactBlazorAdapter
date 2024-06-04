@@ -7,8 +7,19 @@ When your Blazor component is disposed, the react component tree will be unmount
 
 ## Setup
 
+### Blazor WebAssembly Standalone App
+
 * [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter (nuget)
 * [Include the script](#including-adapter-javascript) for ReactBlazorAdapter (JS)
+* [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
+* [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
+* [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
+* [Update props from Blazor](#updating-props-from-blazor) with built-in `StateHasChanged()`
+
+### .NET MAUI Blazor Hybrid App
+
+* [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter.RCL (nuget)
+* [Include the script](#including-adapter-javascript-maui) for ReactBlazorAdapter.MAUI.js (JS)
 * [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
 * [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
 * [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
@@ -19,7 +30,11 @@ When your Blazor component is disposed, the react component tree will be unmount
 Like any other nuget package, you can use the dotnet CLI:
 
 ```
+# for Blazor WebAssembly Standalone App
 dotnet add package ReactBlazorAdapter
+
+# for .NET MAUI Blazor Hybrid App
+dotnet add package ReactBlazorAdapter.RCL
 ```
 
 Or use your favorite IDE to add a nuget package reference to the consuming Blazor WASM project.
@@ -28,11 +43,25 @@ Or use your favorite IDE to add a nuget package reference to the consuming Blazo
 
 For Blazor projects hosted by Visual Studio/Rider, you can add a reference to your index.html file such as:
 ```
-<script type="module" src="/_content/ReactBlazorAdapter/ReactBlazorAdapter.js"></script>
+<!-- The ReactBlazorAdapter.js should come before other scripts -->
+<script src="/_content/ReactBlazorAdapter/ReactBlazorAdapter.js"></script>
+<!-- IE: a create-react-app bundled JS file, components registered here: -->
+<script src="static/js/main.d5dccc3d.js"></script>
+<!-- Blazor built-in JS comes last -->
+<script src="_framework/blazor.webassembly.js"></script>
 ```
 
-**Make sure to include this script before any code that registers your React components** with the ReactBlazorAdapter.
-You can also include the raw `ReactBlazorAdapter.js` file from this repository, which should be less than 2 kB gzipped.
+## Including Adapter JavaScript MAUI
+
+Add the ReactBlazorAdapter.MAUI.js reference to your index.html file:
+
+```
+<!-- //Add the MAUI version of the ReactBlazorAdapter JS library before React JS bundle WITHOUT module attribute -->
+<script src="_content/ReactBlazorAdapter.RCL/ReactBlazorAdapter.MAUI.js"></script>
+<!-- //Add the React JS bundle before blazor.webview.js -->
+<script src="./static/js/my-react-bundle.js"></script>
+<script src="_framework/blazor.webview.js" autostart="false"></script>
+```
 
 ## Initializing ReactBlazorAdapter
 
@@ -61,6 +90,8 @@ Within your Blazor markup, add the `using` directive and leverage the `ReactComp
         ElementId="foocontainer"
 />
 ```
+
+If using MAUI, change the using to `@using ReactBlazorAdapter.RCL.Components`
 
 ### Getting a `ref` to `class` components
 
@@ -173,6 +204,49 @@ You can change the element using the `ElementName` Blazor attribute.
 * Make sure you've called `ReactBlazorAdapter.initialize()` with React and ReactDOM
 * Make sure you've registered your component using `ReactBlazorAdapter.registerComponent()`
 * Check the developer log carefully for all console errors
+
+### What versions of React and .NET are supported?
+
+Currently only .NET 8.0 and React 18 are supported, but I'd like to add support for older versions of React and .NET 6.0 in the future.
+
+### I have a create-react-app bundle, how can I use it?
+
+I hope to add some demo examples to this repository soon. In the meantime... in your `App.js` file, add:
+
+```
+/*global globalThis*/
+// the above line informs eslint that this standard global variable exists
+// add React and ReactDOM explicit imports:
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SampleComponent from 'path/to/component';
+
+//...App component code...
+
+// initialize and register components
+globalThis["ReactBlazorAdapter"].initialize(React, ReactDOM);
+globalThis["ReactBlazorAdapter"].registerComponent('sample-app', App);
+globalThis["ReactBlazorAdapter"].registerComponent('sample-component', SampleComponent);
+
+export default App
+```
+
+Add the compiled output to `wwwroot/static/js` (ie "main" and "chunk" files). Reference them from `index.html` after the `ReactBlazorAdapter.js` file and before `blazor.webview.js` (ie for MAUI).
+
+As create-react-app expects a div with id "root", if you do not wish to eject and customize your create-react-app, you may want to add a `<div id="root" style="display: none;" />` to your `index.html` file to avoid a console error.
+
+### Passing methods as attributes to ReactComponent causes Visual Studio to suggest invoking the method (CS8974)
+
+This seems to be an open issue with the C# toolchain that has been fixed before:
+https://github.com/dotnet/roslyn/issues/60423
+https://github.com/dotnet/roslyn/issues/68307
+
+One way to prevent these warnings is to cast the delegate to object explicitly, for example:
+```
+onCountUpdated="@((object)OnUpdatedCallback)"
+// vs
+onCountUpdated="@OnUpdatedCallback"
+```
 
 ### License and Copyright
 

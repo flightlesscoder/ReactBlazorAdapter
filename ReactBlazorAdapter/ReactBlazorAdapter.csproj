@@ -13,15 +13,18 @@
         <RepositoryUrl>https://github.com/flightlesscoder/ReactBlazorAdapter</RepositoryUrl>
         <RepositoryType>github</RepositoryType>
         <PackageTags>blazor,react,wasm</PackageTags>
-        <PackageReleaseNotes>* Change ReactBlazorAdapter.js to non-module so it is not deferred
-* Remove console log</PackageReleaseNotes>
+        <PackageReleaseNotes>* Update README content - no code changes</PackageReleaseNotes>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include=".\README.md" Pack="true" PackagePath="\" />
+        <None Include="..\..\..\..\Users\Katie\Downloads\LICENSE.md">
+          <Pack>True</Pack>
+          <PackagePath>\</PackagePath>
+        </None>
+        <None Include="..\..\..\..\Users\Katie\Downloads\README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
     <ItemGroup>
         <SupportedPlatform Include="browser" />
