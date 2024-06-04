@@ -1,0 +1,50 @@
+﻿@page "/class-component"
+@using ReactBlazorAdapter.RCL.Components
+
+<h1>Class Component</h1>
+
+<ReactComponent @ref="SampleClassComponent"
+                ComponentName="sample-class"
+                ElementId="sampleclass"
+                onCountUpdated="@OnUpdatedCallback"
+                message="@MessageFromBlazor"
+                CallbackTo="this" />
+
+<button @onclick="CallFromBlazor">Call class from Blazor</button>
+<button @onclick="UpdateMessage">Update the message from Blazor</button>
+<span>React last updated with: @LastReactValue</span>
+@code {
+    public ReactComponent SampleClassComponent { get; set; } = null!;
+    public bool IsRendering { get; set; } = true;
+    public int LastReactValue { get; set; }
+    public string MessageFromBlazor { get; set; } = "original message";
+
+    [JSInvokable("onCountUpdated")]
+    public void OnUpdatedCallback(int value)
+    {
+        Console.WriteLine("Blazor updated by react! " + value);
+        LastReactValue = value;
+        StateHasChanged();
+    }
+
+    private void ToggleReact()
+    {
+        IsRendering = !IsRendering;
+        StateHasChanged();
+    }
+
+    private async Task CallFromBlazor()
+    {
+        LastReactValue = await SampleClassComponent.InvokeMethod<int>("showAlert", new object[]
+        {
+            "Hello from Blazor!"
+        });
+    }
+
+    private void UpdateMessage()
+    {
+        MessageFromBlazor = "Message updated " + DateTime.Now.ToShortTimeString();
+        StateHasChanged();
+    }
+
+}
