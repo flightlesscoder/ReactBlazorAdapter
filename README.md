@@ -5,6 +5,10 @@
 This project aims to be a lightweight adapter that allows embedding React components in Blazor while integrating the React lifecycle and providing support for callbacks to Blazor components.
 When your Blazor component is disposed, the react component tree will be unmounted (ie: event handlers managed by react will be unsubscribed).
 
+## Examples and Demos
+
+[Please check out the sample projects here.](https://github.com/flightlesscoder/ReactBlazorAdapter/tree/main/Demos)
+
 ## Setup
 
 * [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter (nuget)
