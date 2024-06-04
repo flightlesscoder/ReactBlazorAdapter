@@ -239,6 +239,13 @@ This seems to be an open issue with the C# toolchain that has been fixed before:
 https://github.com/dotnet/roslyn/issues/60423
 https://github.com/dotnet/roslyn/issues/68307
 
+One way to prevent these warnings is to cast the delegate to object explicitly, for example:
+```
+onCountUpdated="@((object)OnUpdatedCallback)"
+// vs
+onCountUpdated="@OnUpdatedCallback"
+```
+
 ### License and Copyright
 
 This project is licensed under the Apache 2.0 license (see LICENSE.md).
