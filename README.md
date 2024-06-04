@@ -5,24 +5,11 @@
 This project aims to be a lightweight adapter that allows embedding React components in Blazor while integrating the React lifecycle and providing support for callbacks to Blazor components.
 When your Blazor component is disposed, the react component tree will be unmounted (ie: event handlers managed by react will be unsubscribed).
 
-
-
 ## Setup
-
-### Blazor WebAssembly Standalone App
 
 * [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter (nuget)
 * [Include the script](#including-adapter-javascript) for ReactBlazorAdapter (JS)
-* [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
-* [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
-* [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
-* [Update props from Blazor](#updating-props-from-blazor) with built-in `StateHasChanged()`
-
-### .NET MAUI Blazor Hybrid App
-
-* [Add a reference](#adding-a-nuget-reference) to ReactBlazorAdapter.RCL (nuget)
-* [Include the script](#including-adapter-javascript-maui) for ReactBlazorAdapter.MAUI.js (JS)
-* [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM
+* [Initialize ReactBlazorAdapter](#initializing-reactblazoradapter) with references to React, ReactDOM in your JavaScript bundle/app
 * [Consume React components](#using-react-components) with the Blazor `<ReactComponent>`
 * [Receive callbacks from React](#receiving-callbacks-from-react-components-in-blazor) with one extra step
 * [Update props from Blazor](#updating-props-from-blazor) with built-in `StateHasChanged()`
@@ -45,23 +32,20 @@ Or use your favorite IDE to add a nuget package reference to the consuming Blazo
 
 For Blazor projects hosted by Visual Studio/Rider, you can add a reference to your index.html file such as:
 ```
-<!-- The ReactBlazorAdapter.js should come before other scripts -->
+<!-- For Blazor WebAssembly Standalone App -->
 <script src="/_content/ReactBlazorAdapter/ReactBlazorAdapter.js"></script>
-<!-- IE: a create-react-app bundled JS file, components registered here: -->
-<script src="static/js/main.d5dccc3d.js"></script>
-<!-- Blazor built-in JS comes last -->
-<script src="_framework/blazor.webassembly.js"></script>
-```
 
-## Including Adapter JavaScript MAUI
-
-Add the ReactBlazorAdapter.MAUI.js reference to your index.html file:
-
-```
-<!-- //Add the MAUI version of the ReactBlazorAdapter JS library before React JS bundle WITHOUT module attribute -->
+<!-- For Blazor MAUI -->
 <script src="_content/ReactBlazorAdapter.RCL/ReactBlazorAdapter.MAUI.js"></script>
-<!-- //Add the React JS bundle before blazor.webview.js -->
-<script src="./static/js/my-react-bundle.js"></script>
+
+<!-- IE: a create-react-app bundled JS file, components registered here: -->
+<script src="static/js/my-react-bundle.js"></script>
+
+<!-- Blazor built-in JS comes last -->
+<!-- For Blazor WebAssembly Standalone -->
+<script src="_framework/blazor.webassembly.js"></script>
+
+<!-- For Blazor MAUI -->
 <script src="_framework/blazor.webview.js" autostart="false"></script>
 ```
 
@@ -71,29 +55,30 @@ Add the ReactBlazorAdapter.MAUI.js reference to your index.html file:
 
 Within your React code, add the following:
 ```javascript
+/*global globalThis*/
 import React from 'react'
-import ReactDOM from 'react-dom/client' //React 18 is from 'react-dom'
+import ReactDOM from 'react-dom'
 import FooComponent from './path/to/FooComponent'
+
 // Pass React and ReactDOM to initialize()
-ReactBlazorAdapter.initialize(React, ReactDOMClient)
+globalThis["ReactBlazorAdapter"].initialize(React, ReactDOM)
 // Register your top-level react components that Blazor will consume
 // "fooname" is an arbitrary alias that is shared with Blazor passed to the ComponentName attribute in Blazor
-ReactBlazorAdapter.registerComponent('fooname', FooComponent)
+globalThis["ReactBlazorAdapter"].registerComponent('fooname', FooComponent)
 ```
 
 ## Using React Components
 
 Within your Blazor markup, add the `using` directive and leverage the `ReactComponent` Blazor component.
 ```htmlinblazor
-@using ReactBlazorAdapter.Components
+@using ReactBlazorAdapter.Components //Blazor Standalone WASM
+@using ReactBlazorAdapter.RCL.Components //Blazor MAUI
 <!-- ... -->
 <ReactComponent
         ComponentName="foo"
         ElementId="foocontainer"
 />
 ```
-
-If using MAUI, change the using to `@using ReactBlazorAdapter.RCL.Components`
 
 ### Getting a `ref` to `class` components
 
@@ -182,8 +167,6 @@ Props passed to React are updated the same way other state in Blazor markup is u
   }
 }
 ```
-
-
 
 ## Q&amp;A
 
